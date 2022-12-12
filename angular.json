@@ -94,8 +94,21 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "attendanceTracker:build:production",
+            "firebaseProject": "attendancetracker-5e615",
+            "firebaseHostingSite": "attendancetracker-5e615"
+          }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
