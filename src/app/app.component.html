@@ -1,48 +1,50 @@
 <div style="text-align: center;">
   <h1 style="margin-top: 1%;">Attendance tracker</h1>
-  <h2>Le {{ this.daysArray[this.date.getDay()] }} {{ this.date.toLocaleString('fr-FR') }}</h2>
+  <h2>{{ this.day }} {{ this.date.toLocaleString('fr-FR') }}</h2>
 </div>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
-
-  <!-- Position Column -->
+<table mat-table [dataSource]="tablePresences" class="mat-elevation-z8">
   <ng-container matColumnDef="idEtudiant">
     <th mat-header-cell *matHeaderCellDef> Id de l'étudiant </th>
-    <td mat-cell *matCellDef="let etudiant"> {{etudiant.idEtudiant}} </td>
+    <td mat-cell *matCellDef="let entry"> {{entry.idEtudiant}} </td>
   </ng-container>
 
-  <!-- Name Column -->
   <ng-container matColumnDef="nomEtudiant">
     <th mat-header-cell *matHeaderCellDef> Nom de l'étudiant </th>
-    <td mat-cell *matCellDef="let etudiant"> {{etudiant.nomEtudiant}} </td>
+    <td mat-cell *matCellDef="let entry"> {{entry.nomEtudiant}} </td>
   </ng-container>
 
-  <!-- Weight Column -->
   <ng-container matColumnDef="prenomEtudiant">
     <th mat-header-cell *matHeaderCellDef> Prénom de l'étudiant </th>
-    <td mat-cell *matCellDef="let etudiant"> {{etudiant.prenomEtudiant}} </td>
+    <td mat-cell *matCellDef="let entry"> {{entry.prenomEtudiant}} </td>
   </ng-container>
 
-  <!-- Symbol Column -->
-  <ng-container matColumnDef="place">
+  <ng-container matColumnDef="niveauEtudiant">
+    <th mat-header-cell *matHeaderCellDef> Niveau de l'étudiant </th>
+    <td mat-cell *matCellDef="let etudiant"> {{etudiant.niveauEtudiant}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="groupeEtudiant">
+    <th mat-header-cell *matHeaderCellDef> Niveau de l'étudiant </th>
+    <td mat-cell *matCellDef="let entry"> {{entry.groupeEtudiant}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="idPlace">
     <th mat-header-cell *matHeaderCellDef> Numéro de place </th>
-    <td mat-cell *matCellDef="let etudiant"> {{etudiant.place}} </td>
+    <td mat-cell *matCellDef="let entry"> {{entry.idPlace}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="placeOccupee">
+  <ng-container matColumnDef="estOccupee">
     <th mat-header-cell *matHeaderCellDef> Place occupée </th>
-    <td mat-cell *matCellDef="let etudiant">
-      <img [src]="'/assets/images/' + etudiant.placeOccupee + '.png'"/>
+    <td mat-cell *matCellDef="let entry">
+      <img [src]="'/assets/images/' + entry.estOccupee + '.png'"/>
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="heure">
+  <!-- <ng-container matColumnDef="heure">
     <th mat-header-cell *matHeaderCellDef> Heure d'occupation </th>
-    <td mat-cell *matCellDef="let etudiant"> {{etudiant.heure}} </td>
-  </ng-container>
+    <td mat-cell *matCellDef="let etudiant"> {{entry.heure}} </td>
+  </ng-container> -->
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { Etudiant } from './model';
+import { list } from 'rxfire/database';
+import { Etudiant, Place } from './models';
 
 @Component({
   selector: 'app-root',
@@ -8,28 +9,42 @@ import { Etudiant } from './model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  
   title = 'attendanceTracker';
+
   daysArray = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
   date = new Date();
-  displayedColumns: string[] = ["idEtudiant", "nomEtudiant", "prenomEtudiant", "place", "placeOccupee", "heure"];
-  dataSource: Etudiant[] = [
-    { idEtudiant: 1, nomEtudiant: 'Nom', prenomEtudiant: 'Aymane', place: 10, placeOccupee: true, heure: '10:10:20' },
-    { idEtudiant: 1, nomEtudiant: 'Nom2', prenomEtudiant: 'Aymane', place: 10, placeOccupee: false, heure: '10:10:20' },
-    { idEtudiant: 1, nomEtudiant: 'Nom3', prenomEtudiant: 'hamza', place: 10, placeOccupee: true, heure: '10:10:20' },
-    { idEtudiant: 1, nomEtudiant: 'Nom', prenomEtudiant: 'Aymane', place: 10, placeOccupee: true, heure: '10:10:20' },
-    { idEtudiant: 1, nomEtudiant: 'Nom4', prenomEtudiant: 'kawtar', place: 10, placeOccupee: true, heure: '10:10:20' },
-    { idEtudiant: 1, nomEtudiant: 'Nom', prenomEtudiant: 'Aymane', place: 10, placeOccupee: false, heure: '10:10:20' },
-    { idEtudiant: 1, nomEtudiant: 'Chaki', prenomEtudiant: 'Aymane', place: 10, placeOccupee: false, heure: '10:10:20' },
-  ];
+  day = this.daysArray[this.date.getDay()];
+  
+  tablePresences: any[] = [];
+  displayedColumns: string[] = ["idEtudiant", "nomEtudiant", "prenomEtudiant", "niveauEtudiant", "groupeEtudiant", "idPlace", "estOccupee"];
+  etudiants: Etudiant[] = [];
+  places: Place[] = [];
 
-
-  constructor(db: AngularFireDatabase) {
+  constructor(private db: AngularFireDatabase) {
 
   }
 
   ngOnInit() {
-    console.log(this.dataSource);
-  }
+    setInterval(() => {
+      this.date = new Date();
+      this.day = this.daysArray[this.date.getDay()];
+      
+    }, 1000);
 
+    this.db.list('etudiants')
+      .valueChanges()
+        .subscribe((liste_etudiants: any[]) => this.etudiants = liste_etudiants);
+    this.db.list('places')
+      .valueChanges()
+        .subscribe((liste_places: any[]) => {
+            this.places = liste_places;
+            const mergeById = (etudiants: Etudiant[], places: Place[]) =>
+              etudiants.map(etudiant => ({
+                  ...places.find((place) => (place.idPlace === etudiant.idEtudiant) && place),
+                  ...etudiant
+            }));
+  
+            this.tablePresences = mergeById(this.etudiants, this.places);
+        });  
+  }
 }
